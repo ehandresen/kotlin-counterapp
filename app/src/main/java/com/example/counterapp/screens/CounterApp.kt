@@ -13,26 +13,24 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.material3.Text
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.counterapp.viewmodels.CounterViewModel
 
 @Composable
 fun CounterApp(modifier: Modifier = Modifier) {
-    var counter by remember { mutableStateOf(0) }
+    val counterViewModel: CounterViewModel = viewModel()
+
     Column(
         modifier = modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ){
         Text("You pushed a button this many times")
-        Text(text = "$counter", style = MaterialTheme.typography.headlineLarge)
+        Text(text = "${counterViewModel.counter}", style = MaterialTheme.typography.headlineLarge)
         Spacer(modifier = Modifier.height(16.dp))
         Button(onClick = {
-            Log.d("CounterApp", "CounterApp: $counter")
-            counter++
+            counterViewModel.incrementCounter()
         }) {
             Text("Push me")
         }
