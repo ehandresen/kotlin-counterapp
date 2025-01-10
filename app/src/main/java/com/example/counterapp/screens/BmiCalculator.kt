@@ -45,14 +45,17 @@ fun BmiCalculator(modifier: Modifier = Modifier) {
         }
     ) {
         val bmiViewModel: BmiViewModel = viewModel()
+        val uiState = bmiViewModel.bmiUiState.value
 
         Column(
             modifier = modifier.padding(it)
         ) {
             EditNumberField(
-                value = bmiViewModel.weight,
+                value = uiState.weight,
                 label = "Weight (kg)",
-                onValueChange = { bmiViewModel.weight = it },
+                onValueChange = {
+
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -60,9 +63,11 @@ fun BmiCalculator(modifier: Modifier = Modifier) {
                 modifier = modifier
             )
             EditNumberField(
-                value = bmiViewModel.height,
+                value = uiState.height,
                 label = "Height (cm)",
-                onValueChange = { bmiViewModel.height = it },
+                onValueChange = {
+
+                },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
@@ -76,8 +81,8 @@ fun BmiCalculator(modifier: Modifier = Modifier) {
                 Text(text = "Calculate BMI")
             }
             BmiResult(
-                bmi = bmiViewModel.bmi,
-                status = bmiViewModel.status,
+                bmi = uiState.bmi,
+                status = uiState.status,
                 statusMap = BmiViewModel.statusMap,
                 modifier = modifier
             )

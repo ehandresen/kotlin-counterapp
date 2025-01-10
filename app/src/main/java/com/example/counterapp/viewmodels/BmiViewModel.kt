@@ -6,10 +6,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 class BmiViewModel : ViewModel() {
-    var weight by mutableStateOf("")
-    var height by mutableStateOf("")
-    var bmi by mutableStateOf("")
-    var status by mutableStateOf("")
+
+    val bmiUiState = mutableStateOf(BmiUiState())
 
     fun calculateBmi() {
         val weight = weight.toDoubleOrNull() ?: 0.0
@@ -55,6 +53,11 @@ class BmiViewModel : ViewModel() {
             OBESE_CLASS_III to "40 and above"
         )
     }
-
-
 }
+
+data class BmiUiState(
+    val weight: String = "",
+    val height: String = "",
+    val bmi: String = "",
+    val status: String = ""
+)
