@@ -29,6 +29,8 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.counterapp.viewmodels.BmiViewModel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -42,18 +44,15 @@ fun BmiCalculator(modifier: Modifier = Modifier) {
             )
         }
     ) {
-        var weight by remember { mutableStateOf("") }
-        var height by remember { mutableStateOf("") }
-        var bmi by remember { mutableStateOf("") }
-        var status by remember { mutableStateOf("") }
+        val bmiViewModel: BmiViewModel = viewModel()
 
         Column(
             modifier = modifier.padding(it)
         ) {
             EditNumberField(
-                value = weight,
+                value = bmiViewModel.weight,
                 label = "Weight (kg)",
-                onValueChange = { weight = it },
+                onValueChange = { bmiViewModel.weight = it },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -61,9 +60,9 @@ fun BmiCalculator(modifier: Modifier = Modifier) {
                 modifier = modifier
             )
             EditNumberField(
-                value = height,
+                value = bmiViewModel.height,
                 label = "Height (cm)",
-                onValueChange = { height = it },
+                onValueChange = { bmiViewModel.height = it },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
@@ -71,39 +70,18 @@ fun BmiCalculator(modifier: Modifier = Modifier) {
                 modifier = modifier
             )
 
-            Button(onClick = { 
-                bmi = calculateBmi(
-                    weight = weight.toDoubleOrNull() ?: 0.0,
-                    height = height.toDoubleOrNull() ?: 0.0
-                )
-                status = getBMIStatus(bmi.toDouble())
+            Button(onClick = {
+                bmiViewModel.calculateBmi()
             }) {
                 Text(text = "Calculate BMI")
             }
             BmiResult(
-                bmi = bmi,
-                status = status,
+                bmi = bmiViewModel.bmi,
+                status = bmiViewModel.status,
+                statusMap = BmiViewModel.statusMap,
                 modifier = modifier
             )
         }
-    }
-}
-
-fun calculateBmi(weight: Double, height: Double): String {
-    val bmi = weight / ((height / 100) * (height / 100))
-    return String.format("%.1f", bmi)
-}
-
-fun getBMIStatus(bmi: Double): String {
-    return when (bmi) {
-        in 0.0..16.0 -> BMIConstants.SEVERELY_UNDERWEIGHT
-        in 16.0..16.9 -> BMIConstants.UNDERWEIGHT_MODERATE
-        in 17.0..18.4 -> BMIConstants.UNDERWEIGHT
-        in 18.5..24.9 -> BMIConstants.NORMAL_WEIGHT
-        in 25.0..29.9 -> BMIConstants.OVERWEIGHT
-        in 30.0..34.9 -> BMIConstants.OBESE_CLASS_I
-        in 35.0..39.9 -> BMIConstants.OBESE_CLASS_II
-        else -> BMIConstants.OBESE_CLASS_III
     }
 }
 
@@ -129,6 +107,7 @@ fun EditNumberField(
 fun BmiResult(
     bmi: String,
     status: String,
+    statusMap: Map<String, String>,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -169,24 +148,3 @@ private fun BmiCalculatorPreview() {
     BmiCalculator()
 }
 
-object BMIConstants {
-    const val SEVERELY_UNDERWEIGHT = "Severely Underweight"
-    const val UNDERWEIGHT_MODERATE = "Moderate Underweight"
-    const val UNDERWEIGHT = "Underweight"
-    const val NORMAL_WEIGHT = "Normal weight"
-    const val OVERWEIGHT = "Overweight"
-    const val OBESE_CLASS_I = "Obesity Class I"
-    const val OBESE_CLASS_II = "Obesity Class II"
-    const val OBESE_CLASS_III = "Obesity Class III"
-}
-
-val statusMap = mapOf(
-    BMIConstants.SEVERELY_UNDERWEIGHT to "Less than 16.0",
-    BMIConstants.UNDERWEIGHT_MODERATE to "16.0 - 16.9",
-    BMIConstants.UNDERWEIGHT to "17.0 - 18.4",
-    BMIConstants.NORMAL_WEIGHT to "18.5 - 24.9",
-    BMIConstants.OVERWEIGHT to "25.0 -29.9",
-    BMIConstants.OBESE_CLASS_I to "30.0 - 34.9",
-    BMIConstants.OBESE_CLASS_II to "35.0 - 39.9",
-    BMIConstants.OBESE_CLASS_III to "40 and above"
-)

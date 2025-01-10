@@ -68,8 +68,8 @@ fun MyApp(modifier: Modifier = Modifier) {
                         text = if (isDarkMode) "Dark Mode" else "Light Mode",
                         style = MaterialTheme.typography.bodyLarge
                     )
-                    CounterApp() // Your existing app content
-                    //BmiCalculator()
+                    //CounterApp() // Your existing app content
+                    BmiCalculator()
                     //PhotoGallery()
                 }
             }
