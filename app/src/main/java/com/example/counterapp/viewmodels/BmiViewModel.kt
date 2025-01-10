@@ -9,13 +9,22 @@ class BmiViewModel : ViewModel() {
 
     val bmiUiState = mutableStateOf(BmiUiState())
 
+    fun updateWeight(weight: String) {
+        // Creates a new BmiUiState object with the updated weight value, the other properties are unchanged
+        bmiUiState.value = bmiUiState.value.copy(weight = weight)
+    }
+
+    fun updateHeight(height: String) {
+        bmiUiState.value = bmiUiState.value.copy(height = height)
+    }
+
     fun calculateBmi() {
-        val weight = weight.toDoubleOrNull() ?: 0.0
-        val height = height.toDoubleOrNull() ?: 0.0
+        val weight = bmiUiState.value.weight.toDoubleOrNull() ?: 0.0
+        val height = bmiUiState.value.height.toDoubleOrNull() ?: 0.0
 
         val bmiDouble = weight / ((height / 100) * (height / 100))
-        bmi = String.format("%.1f", bmiDouble)
-        status = getBMIStatus(bmiDouble)
+        bmiUiState.value = bmiUiState.value.copy(bmi = String.format("%.2f", bmiDouble)) // copying the object and updating the bmi value
+        bmiUiState.value = bmiUiState.value.copy(status = getBMIStatus(bmiDouble)) // copying the object and updating the status value
     }
 
     private fun getBMIStatus(bmi: Double): String {

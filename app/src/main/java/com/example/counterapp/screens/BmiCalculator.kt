@@ -53,9 +53,9 @@ fun BmiCalculator(modifier: Modifier = Modifier) {
             EditNumberField(
                 value = uiState.weight,
                 label = "Weight (kg)",
-                onValueChange = {
-
-                },
+                onValueChange = bmiViewModel::updateWeight,
+                // The `::` operator is used to pass a reference to the `updateWeight` function in the `bmiViewModel`.
+                // It allows `onValueChange` to directly call this function when triggered.
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Next
@@ -65,9 +65,7 @@ fun BmiCalculator(modifier: Modifier = Modifier) {
             EditNumberField(
                 value = uiState.height,
                 label = "Height (cm)",
-                onValueChange = {
-
-                },
+                onValueChange = bmiViewModel::updateHeight,
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                     imeAction = ImeAction.Done
